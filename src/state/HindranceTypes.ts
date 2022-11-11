@@ -19,16 +19,14 @@ type HindranceSpecs = {
 
 const specs = ({
   cost,
-  gridSpaces = 1
+  gridSpaces = 1,
 }: {
   cost: [resources: number, tradeGoods: number];
   gridSpaces?: number;
 }) => ({
   cost,
-  gridSpaces
+  gridSpaces,
 });
-
-
 
 export const Hindrances: Record<HindranceType, HindranceSpecs> = {
   DAMAGE_TRAP: specs({
@@ -46,5 +44,4 @@ export const Hindrances: Record<HindranceType, HindranceSpecs> = {
   SECRET_PASSAGES: specs({
     cost: tg(50),
   }),
-
 };

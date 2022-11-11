@@ -1,57 +1,32 @@
+import { Action, actions } from "../update/actions";
+import { ActionTypes } from "../update/ActionTypes";
+import { Feature } from "./Feature";
+import { GameEventTypes } from "./GameEvent";
 import { res, tokens, TokensAmount } from "./tokens";
 
 export type RoomType = keyof typeof RoomTypes;
-export const RoomTypes = {
-  CORRIDOR: "CORRIDOR",
-  STAIRS: "STAIRS",
-  // unit rooms
-  BARRACKS: "BARRACKS",
-  CANNON_OUTPOST: "CANNON_OUTPOST",
-  FORGE: "FORGE",
-  MASON: "MASON",
-  INN: "INN",
-  KENNEL: "KENNEL",
-  LABORATORY: "LABORATORY",
-  LIBRARY: "LIBRARY",
-  PRISON: "PRISON",
-  // buffing rooms:
-  // give bonuses towards income, combat, etc.
-  DORMS: "DORMS",
-  HOSPITAL: "HOSPITAL",
-  KITCHEN: "KITCHEN",
-  MUSEUM: "MUSEUM",
-  OVERSEERS_OFFICE: "OVERSEERS_OFFICE",
-  SHRINE: "SHRINE",
-  STOCKPILE: "STOCKPILE",
-  STOREHOUSE: "STOREHOUSE",
-  TEMPLE: "TEMPLE",
-  TREASURY: "TREASURY",
-  // infrastructure rooms:
-  DRAWBRIDGE: "DRAWBRIDGE",
-  ELEVATOR: "ELEVATOR",
-  PUMP: "PUMP",
-  TRACKS: "TRACKS",
-  // advanced rooms:
-  INVENTORS_LAB: "INVENTORS_LAB",
-  BREEDER: "BREEDER",
-} as const;
+
+export type Room = Feature & { type: RoomType };
 
 type RoomSpecs = {
   cost: TokensAmount;
   gridSpaces: number;
+  buildConsequences: (triggerAction: Action) => Action[];
 };
 
 const specs = ({
   cost,
-  gridSpaces = 1
+  gridSpaces = 1,
+  buildConsequences = () => [],
 }: {
   cost: TokensAmount;
   gridSpaces?: number;
+  buildConsequences?: (triggerAction: Action) => Action[];
 }) => ({
   cost,
-  gridSpaces
+  gridSpaces,
+  buildConsequences,
 });
-
 
 export const ROOMS: Record<RoomType, RoomSpecs> = {
   CORRIDOR: specs({
@@ -101,7 +76,7 @@ export const ROOMS: Record<RoomType, RoomSpecs> = {
     gridSpaces: 2,
   }),
   OVERSEERS_OFFICE: specs({
-    cost: res(15)
+    cost: res(15),
   }),
   SHRINE: specs({
     cost: res(20),
@@ -113,11 +88,21 @@ export const ROOMS: Record<RoomType, RoomSpecs> = {
     cost: res(15),
   }),
   TEMPLE: specs({
-    cost: tokens(20,20),
+    cost: tokens(20, 20),
     gridSpaces: 2,
   }),
   TREASURY: specs({
     cost: res(20),
+    buildConsequences: (trigger: Action) => [
+      {
+        type: ActionTypes.ADD_RECURRING_EVENT,
+        event: {
+          type: GameEventTypes.THIEVES_MAY_TARGET_THE_HOLD,
+          order: 10000000000,
+          trigger,
+        },
+      },
+    ],
   }),
   DRAWBRIDGE: specs({
     cost: res(15),
@@ -126,7 +111,7 @@ export const ROOMS: Record<RoomType, RoomSpecs> = {
     cost: res(5),
   }),
   PUMP: specs({
-    cost: res(8 ),
+    cost: res(8),
   }),
   TRACKS: specs({
     cost: res(5),
@@ -139,3 +124,38 @@ export const ROOMS: Record<RoomType, RoomSpecs> = {
     gridSpaces: 4,
   }),
 };
+
+export const RoomTypes = {
+  CORRIDOR: "CORRIDOR",
+  STAIRS: "STAIRS",
+  // unit rooms
+  BARRACKS: "BARRACKS",
+  CANNON_OUTPOST: "CANNON_OUTPOST",
+  FORGE: "FORGE",
+  MASON: "MASON",
+  INN: "INN",
+  KENNEL: "KENNEL",
+  LABORATORY: "LABORATORY",
+  LIBRARY: "LIBRARY",
+  PRISON: "PRISON",
+  // buffing rooms:
+  // give bonuses towards income, combat, etc.
+  DORMS: "DORMS",
+  HOSPITAL: "HOSPITAL",
+  KITCHEN: "KITCHEN",
+  MUSEUM: "MUSEUM",
+  OVERSEERS_OFFICE: "OVERSEERS_OFFICE",
+  SHRINE: "SHRINE",
+  STOCKPILE: "STOCKPILE",
+  STOREHOUSE: "STOREHOUSE",
+  TEMPLE: "TEMPLE",
+  TREASURY: "TREASURY",
+  // infrastructure rooms:
+  DRAWBRIDGE: "DRAWBRIDGE",
+  ELEVATOR: "ELEVATOR",
+  PUMP: "PUMP",
+  TRACKS: "TRACKS",
+  // advanced rooms:
+  INVENTORS_LAB: "INVENTORS_LAB",
+  BREEDER: "BREEDER",
+} as const;

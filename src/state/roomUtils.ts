@@ -1,11 +1,16 @@
 import { FeatureShape } from "./Feature";
-import { Game } from "./Game";
-import { ROOMS, RoomType } from "./RoomTypes";
+import { GameState } from "./GameState";
+import { isOccupiedAt } from "./gridUtils";
+import { ROOMS, RoomType } from "./Room";
 
-export function getBuildableRoomTypesAt(game: Game, x: number, y: number) {
+export function getBuildableRoomTypesAt(
+  { grid }: GameState,
+  x: number,
+  y: number
+) {
   const result: { roomType: RoomType; possibleShapes: FeatureShape[] }[] = [];
-  
-  const spotIsOccupied = game.grid.isOccupiedAt(x, y);
+
+  const spotIsOccupied = isOccupiedAt(grid, x, y);
   if (spotIsOccupied) {
     return result;
   }
@@ -14,10 +19,10 @@ export function getBuildableRoomTypesAt(game: Game, x: number, y: number) {
     const roomType = rt as RoomType;
     const possibleShapes = getPossibleShapesFor(roomType as RoomType);
     const possibleShapesAtLocation = possibleShapes.filter((shape) =>
-      shape.every(([dx, dy]) => !game.grid.isOccupiedAt(x + dx, y + dy))
+      shape.every(([dx, dy]) => !isOccupiedAt(grid, x + dx, y + dy))
     );
 
-    result.push(({ roomType, possibleShapes: possibleShapesAtLocation }));
+    result.push({ roomType, possibleShapes: possibleShapesAtLocation });
   }
 
   return result;

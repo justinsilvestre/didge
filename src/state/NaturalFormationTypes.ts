@@ -1,4 +1,4 @@
-import { Game } from "./Game";
+import { GameState } from "./GameState";
 
 export type NaturalFormationType = keyof typeof NaturalFormationTypes;
 export const NaturalFormationTypes = {
@@ -22,7 +22,7 @@ type NaturalFormationSpecs = {
   gridSpaces: number | "D4" | "D2";
   effect?: {
     description: string;
-    execute: (game: Game) => Game;
+    execute: (game: GameState) => GameState;
   };
 };
 
