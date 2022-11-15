@@ -1,4 +1,3 @@
-import { EventsDict, GameEvent } from "./GameEvent";
 import { Grid } from "./Grid";
 import { TokensWallet } from "./TokensWallet";
 
@@ -11,36 +10,29 @@ import { TokensWallet } from "./TokensWallet";
 export type GameState = {
   grid: Grid;
   tokens: TokensWallet;
-  recurringEvents: EventsDict;
-  pendingMoves: GameEvent[];
+  status: PlayerStatus;
 };
+
+type PlayerStatus = Partial<Record<PlayerStatusElement, 1>>;
+
+type PlayerStatusElement =
+  | "exploring"
+  | "resolvingCombat"
+  | "trading"
+  | "building"
+  | "recruiting"
+  | "thieves may target the hold";
 
 export function createGame({
   grid,
   tokens,
-  recurringEvents,
-  pendingMoves,
+  status,
 }: {
   grid: Grid;
   tokens: TokensWallet;
-  recurringEvents: EventsDict;
-  pendingMoves: GameEvent[];
+  status: PlayerStatus;
 }): GameState {
-  return { grid, tokens, recurringEvents, pendingMoves };
-}
-
-/** does not clone gride and tokens */
-export function cloneGame(
-  game: GameState,
-  props: Partial<GameState> = {}
-): GameState {
-  const {
-    grid = game.grid,
-    tokens = game.tokens,
-    recurringEvents = game.recurringEvents,
-    pendingMoves = game.pendingMoves,
-  } = props;
-  return createGame({ grid, tokens, recurringEvents, pendingMoves });
+  return { grid, tokens, status };
 }
 
 export function getCurrentDepth({ grid }: GameState) {

@@ -1,19 +1,24 @@
-import { GameEvent } from "../state/GameEvent";
 import { FeatureId } from "../state/Feature";
 import { TokensAmount } from "../state/tokens";
 import { Unit } from "../state/Unit";
-import { AnyCard, D13Result, D4Result, SuitCard } from "../effects/effects";
+import { AnyCard, D4Result, SuitCard } from "../effects/effects";
 import { ActionTypes } from "./ActionTypes";
-import { GameState } from "../state/GameState";
 import { EntityId } from "../state/EntityId";
 
 const A = ActionTypes;
 
 export const actions = {
   init: () => ({ type: A.INIT }),
-  resolveEvent: (event: GameEvent) => ({
-    type: A.RESOLVE_EVENT,
-    event,
+  notify: (message: string) => ({ type: A.NOTIFY, message }),
+  startExploring: () => ({ type: A.START_EXPLORING }),
+  startTradeTokens: (change: TokensAmount) => ({
+    type: A.START_TRADE_TOKENS,
+  }),
+  startBuildFeature: () => ({
+    type: A.START_BUILD_FEATURE,
+  }),
+  startRecruitUnits: () => ({
+    type: A.START_RECRUIT_UNITS,
   }),
   exploreAttempt: (
     origin: [x: number, y: number],
@@ -39,21 +44,18 @@ export const actions = {
     draw,
     newFeatureId,
   }),
-  addRecurringEvent: (event: GameEvent) => ({
-    type: A.ADD_RECURRING_EVENT,
-    event,
+  resolveNaturalFormation: () => ({
+    type: A.RESOLVE_NATURAL_FORMATION,
+  }),
+  resolveRemnant: (drawFromExploreSuccess: SuitCard & { suit: "SPADE" }) => ({
+    type: A.RESOLVE_REMNANT,
+    drawFromExploreSuccess,
   }),
   updateTokens: (difference: TokensAmount, reason: string) => ({
     type: A.UPDATE_TOKENS,
     difference,
     reason,
   }),
-  enqueueEvent: (event: GameEvent) => {
-    return {
-      type: A.ENQUEUE_EVENT,
-      event,
-    };
-  },
   enterCombat: () => ({
     type: A.ENTER_COMBAT,
   }),
@@ -61,11 +63,19 @@ export const actions = {
     type: A.ADD_UNITS,
     unitPlacements,
   }),
-  thievesTargetTheHold: (d4: D4Result) => ({
+  [A.THIEVES_TARGET_THE_HOLD]: (d4: D4Result) => ({
     type: A.THIEVES_TARGET_THE_HOLD,
     d4,
   }),
 } as const;
+
+// type Actions = {
+//   [T in ActionType]: (...args: any[]) => ActionOf<T>;
+// };
+
+// /* eslint-disable @typescript-eslint/no-unused-vars */
+// const _validateActions: Actions = actions;
+// /* eslint-enable @typescript-eslint/no-unused-vars */
 
 type UnitPlacement = {
   unit: Unit;

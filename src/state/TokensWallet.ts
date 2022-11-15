@@ -32,7 +32,7 @@ export function cloneTokensWallet(base: TokensWallet) {
   return createTokensWallet(base);
 }
 
-export function updateWallet(
+export function addTokens(
   wallet: TokensWallet,
   [resources, tradeGoods]: TokensAmount
 ) {
@@ -55,9 +55,9 @@ function keepWithinRange(value: number, min: number, max: number) {
 }
 
 export function addResources(wallet: TokensWallet, resources: number) {
-  return updateWallet(wallet, [resources, 0]);
+  return addTokens(wallet, [resources, 0]);
 }
 
 export function addTradeGoods(wallet: TokensWallet, tradeGoods: number) {
-  return updateWallet(wallet, [0, tradeGoods]);
+  return addTokens(wallet, [0, tradeGoods]);
 }

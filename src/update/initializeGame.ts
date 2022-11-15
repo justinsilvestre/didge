@@ -1,11 +1,9 @@
 import { Effects } from "../effects/effects";
 import { createFeature, FeatureTypes } from "../state/Feature";
-import { GameEventTypes } from "../state/GameEvent";
 import { createGame, GameState } from "../state/GameState";
 import { createGrid } from "../state/Grid";
 import { createTokensWallet } from "../state/TokensWallet";
 import { createUnit } from "../state/Unit";
-import { actions } from "./actions";
 
 const DEFAULT_GRID_HEIGHT = 15;
 const DEFAULT_GRID_WIDTH = 15;
@@ -33,6 +31,7 @@ export function initializeGame(effects: Effects): GameState {
   });
 
   return createGame({
+    status: { exploring: 1 },
     grid: createGrid({
       width: DEFAULT_GRID_WIDTH,
       height: DEFAULT_GRID_HEIGHT,
@@ -47,12 +46,5 @@ export function initializeGame(effects: Effects): GameState {
       maxResources: INITIAL_MAX_RESOURCES,
       maxTradeGoods: INITIAL_MAX_TRADE_GOODS,
     }),
-    recurringEvents: {},
-    pendingMoves: [
-      {
-        type: GameEventTypes.EXPLORE,
-        order: 0,
-      },
-    ],
   });
 }

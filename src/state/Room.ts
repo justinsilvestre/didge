@@ -1,7 +1,4 @@
-import { Action, actions } from "../update/actions";
-import { ActionTypes } from "../update/ActionTypes";
 import { Feature } from "./Feature";
-import { GameEventTypes } from "./GameEvent";
 import { res, tokens, TokensAmount } from "./tokens";
 
 export type RoomType = keyof typeof RoomTypes;
@@ -11,21 +8,17 @@ export type Room = Feature & { type: RoomType };
 type RoomSpecs = {
   cost: TokensAmount;
   gridSpaces: number;
-  buildConsequences: (triggerAction: Action) => Action[];
 };
 
 const specs = ({
   cost,
   gridSpaces = 1,
-  buildConsequences = () => [],
 }: {
   cost: TokensAmount;
   gridSpaces?: number;
-  buildConsequences?: (triggerAction: Action) => Action[];
 }) => ({
   cost,
   gridSpaces,
-  buildConsequences,
 });
 
 export const ROOMS: Record<RoomType, RoomSpecs> = {
@@ -93,16 +86,6 @@ export const ROOMS: Record<RoomType, RoomSpecs> = {
   }),
   TREASURY: specs({
     cost: res(20),
-    buildConsequences: (trigger: Action) => [
-      {
-        type: ActionTypes.ADD_RECURRING_EVENT,
-        event: {
-          type: GameEventTypes.THIEVES_MAY_TARGET_THE_HOLD,
-          order: 10000000000,
-          trigger,
-        },
-      },
-    ],
   }),
   DRAWBRIDGE: specs({
     cost: res(15),

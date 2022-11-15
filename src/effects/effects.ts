@@ -36,7 +36,7 @@ type DrawOptions = {
 export type SuitCard = {
   suit: "HEART" | "DIAMOND" | "CLUB" | "SPADE";
   /** one to thirteen */
-  value: number;
+  value: D13Result;
 };
 export type AnyCard =
   | ({
@@ -89,7 +89,7 @@ export const effects = {
     return {
       type: "SUIT",
       suit: SUITS[suitNumber as 0 | 1 | 2 | 3],
-      value: random(13) + 1,
+      value: (random(13) + 1) as D13Result,
     };
   },
 
