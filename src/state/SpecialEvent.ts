@@ -44,9 +44,16 @@ export const SPECIAL_EVENTS: {
       effect: (previousState, currentState, action) => {
         const warning =
           previousState.tokens.tradeGoods <= 100 &&
-          currentState.tokens.tradeGoods > 100;
+          currentState.tokens.tradeGoods > 100 &&
+          "watch out for thieves!";
+        const safeMessage =
+          previousState.tokens.tradeGoods > 100 &&
+          currentState.tokens.tradeGoods <= 100 &&
+          "you are now safe from thieves";
+        const message = warning || safeMessage;
+        const notification = message ? [cmd.notify(message)] : [];
 
-        return [currentState, null];
+        return [currentState, notification];
       },
     },
   ]),
@@ -59,10 +66,12 @@ export const SPECIAL_EVENTS: {
           const tokendsDif = tg(-Math.ceil(currentState.tokens.tradeGoods / 2));
           return [
             currentState,
-            cmd.updateTokens(
-              tokendsDif,
-              "thieves steal half of your trade goods"
-            ),
+            [
+              cmd.updateTokens(
+                tokendsDif,
+                "thieves steal half of your trade goods"
+              ),
+            ],
           ];
         } else {
           const lowestTreasuryId = "PLACEHOLDER";

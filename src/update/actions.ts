@@ -1,4 +1,4 @@
-import { FeatureId } from "../state/Feature";
+import { Feature, FeatureId } from "../state/Feature";
 import { TokensAmount } from "../state/tokens";
 import { Unit } from "../state/Unit";
 import { AnyCard, D4Result, SuitCard } from "../effects/effects";
@@ -63,19 +63,23 @@ export const actions = {
     type: A.ADD_UNITS,
     unitPlacements,
   }),
+  addFeature: (feature: Feature) => ({
+    type: A.ADD_FEATURE,
+    feature,
+  }),
   [A.THIEVES_TARGET_THE_HOLD]: (d4: D4Result) => ({
     type: A.THIEVES_TARGET_THE_HOLD,
     d4,
   }),
 } as const;
 
-// type Actions = {
-//   [T in ActionType]: (...args: any[]) => ActionOf<T>;
-// };
+type Actions = {
+  [T in ActionType]: (...args: any[]) => ActionOf<T>;
+};
 
-// /* eslint-disable @typescript-eslint/no-unused-vars */
-// const _validateActions: Actions = actions;
-// /* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+const _validateActions: Actions = actions;
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 type UnitPlacement = {
   unit: Unit;

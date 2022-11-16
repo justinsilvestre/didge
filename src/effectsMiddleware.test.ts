@@ -58,8 +58,8 @@ describe("effectsMiddleware", () => {
   const store = createStore(
     update,
     applyMiddleware(
-      getEffectsMiddleware<[State, Command | null], Command, Action>(
-        ([, cmd]) => cmd,
+      getEffectsMiddleware<[State, Command[]], Command, Action>(
+        ([, cmds]) => cmds,
         runCommand
       )
     )

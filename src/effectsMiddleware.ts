@@ -10,17 +10,23 @@ function enqueueCommand<C>(cmd: C) {
 }
 
 export function getEffectsMiddleware<S, C, A extends AnyAction>(
-  getCmd: (state: S) => C | null,
+  getCmds: (state: S) => C[],
   resolveCmd: (cmd: C) => Promise<A | null>
 ): Middleware<{}, S, Dispatch<A>> {
   return (store) => (nextDispatch) => (action) => {
     const result = nextDispatch(action);
     const newState = store.getState();
-    const cmd = getCmd(newState);
-    if (cmd)
-      resolveCmd(cmd).then((action) => {
-        if (action) store.dispatch(action);
-      });
+    const cmds = getCmds(newState);
+    console.log({ cmds });
+    if (cmds) {
+      Promise.all(
+        cmds.map((cmd) =>
+          resolveCmd(cmd).then((action) => {
+            if (action) store.dispatch(action);
+          })
+        )
+      );
+    }
     return result;
   };
 }

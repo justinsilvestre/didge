@@ -1,14 +1,20 @@
 import "./App.css";
 import { getFeature } from "./state/gridUtils";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { GameState } from "./state/GameState";
 import { Command } from "./update/Command";
-import { ActionType } from "./update/actions";
+import { actions, ActionType } from "./update/actions";
+import { useEffect } from "react";
 
 function App() {
   const state = useSelector(
     ([state]: [GameState, Command<ActionType>]) => state
   );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(actions.startExploring());
+  }, [dispatch]);
 
   return (
     <div className="App">

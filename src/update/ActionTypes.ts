@@ -13,5 +13,6 @@ export const ActionTypes = {
   UPDATE_TOKENS: "updateTokens",
   ENTER_COMBAT: "enterCombat",
   ADD_UNITS: "addUnits",
+  ADD_FEATURE: "addFeature",
   THIEVES_TARGET_THE_HOLD: "thievesTargetTheHold",
 } as const;

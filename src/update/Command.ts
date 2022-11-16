@@ -12,15 +12,12 @@ export type Command<T extends ActionType = ActionType> = {
   args: Args<T>;
 };
 
-export type UpdateResult<S, T extends ActionType> = [
-  S,
-  Command<T> | Command<T>[] | null
-];
+export type UpdateResult<S, T extends ActionType> = [S, Command<T>[]];
 
 export function setState<S, T extends ActionType>(
   newState: S
 ): UpdateResult<S, T> {
-  return [newState, null];
+  return [newState, []];
 }
 export function runCommand<S, T extends ActionType>(command: Command<T>) {
   return [];

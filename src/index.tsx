@@ -12,12 +12,12 @@ import {
 import { update } from "./update/update";
 import { getEffectsMiddleware } from "./effectsMiddleware";
 import { Command } from "./update/Command";
-import { ActionType } from "./update/actions";
+import { actions, ActionType } from "./update/actions";
 import { effects } from "./effects/effects";
 import { GameState } from "./state/GameState";
 
 const effectsMiddleware = getEffectsMiddleware(
-  ([, cmd]: [GameState, Command<ActionType>]) => cmd,
+  ([, cmds]: [GameState, Command<ActionType>[]]) => cmds,
   async (command: Command<ActionType>) => {
     const actionArgs: any[] = [];
     for (const actionArg of command.args) {
